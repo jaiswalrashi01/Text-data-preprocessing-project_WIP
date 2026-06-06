@@ -1,0 +1,45 @@
+# ══════════════════════════════════════════════════════════════
+# CC_NEWS preprocessing — central configuration
+# Edit paths and parameters HERE. Never hardcode them in the code.
+# This single file is what replaces all the /content/drive/... paths.
+# ══════════════════════════════════════════════════════════════
+
+paths:
+  # Point this at wherever the data lives. Relative paths are resolved
+  # against the project root. On Colab this was:
+  #   /content/drive/MyDrive/CC_News_Project
+  # Locally, the default below keeps everything inside the repo's data/.
+  base_dir: "./data"
+  raw_subdir: "raw"
+  interim_subdir: "interim"
+  processed_subdir: "processed"
+  audits_subdir: "audits"
+
+dataset:
+  hf_name: "vblagoje/cc_news"
+  text_col: "text"
+  title_col: "title"
+
+columns:
+  # Step 1 drops these now (clearly unused downstream).
+  drop_initial: ["url", "image_url", "date"]
+  # description and domain are dropped LATER, in the boilerplate step,
+  # after they've been used for inspection — matching the notebook order.
+  drop_later: ["description", "domain"]
+
+dedup:
+  high_freq_threshold: 40    # stories repeating >40 times -> keep first occurrence only
+
+boilerplate:
+  # The hand-labeled review file you place in data/audits/. It must have a
+  # 'phrase' column and an 'action' column (0 = remove all, 1 = keep first).
+  audit_file: "discovered_boilerplate_n15.xlsx"
+  minhash:
+    n_size: 15               # phrase length in words
+    similarity: 0.95         # Jaccard threshold (0.95 = near-exact)
+    num_permutations: 128
+    chunk_size: 1000         # rows per chunk (tune down if RAM is tight)
+    threshold: 2             # phrase must appear in >= this many articles
+
+# One seed for every random operation, so runs are reproducible.
+random_seed: 42

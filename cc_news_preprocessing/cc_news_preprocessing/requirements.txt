@@ -1,0 +1,26 @@
+# CC_NEWS preprocessing — dependencies
+#
+# PINNING: versions are intentionally left open so you can lock them to the
+# exact versions from your working Colab. Once stable, run:
+#     pip freeze > requirements.lock.txt
+# and commit that lock file alongside this one.
+#
+# LANGUAGE DETECTION — hard-won note (do not re-learn this the hard way):
+#     fasttext  -> failed to build on Colab's current Python
+#     pycld3    -> failed to install
+#     lingua    -> WORKS. This is the detector we use. Test before swapping.
+
+pandas
+numpy
+pyyaml                      # reads config/config.yaml
+
+datasets                   # HuggingFace — one-time CC_NEWS download
+tqdm                       # progress bars
+
+langid                     # quick first-pass language guess (EDA only)
+lingua-language-detector   # the detector that actually works (see note above)
+
+datasketch                 # MinHash LSH for boilerplate discovery
+mmh3                       # fast hashing (earlier n-gram audit)
+pyarrow                    # parquet read/write for discovered phrases
+openpyxl                   # reads the hand-labeled boilerplate audit .xlsx
